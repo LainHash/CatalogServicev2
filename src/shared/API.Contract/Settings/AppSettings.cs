@@ -5,8 +5,9 @@ namespace API.Contract.Settings
         public string AppName { get; init; } = string.Empty;
         public string AppVersion { get; init; } = string.Empty;
 
-        public JwtSettings Jwt { get; init; } = new();
         public AuditLogSettings AuditLog { get; init; } = new();
         public DatabaseSettings Database { get; init; } = new();
+        public BootstrapSettings Bootstrap { get; init; } = new();
+        public CloudinarySettings Cloudinary { get; init; } = new();
     }
 }

@@ -1,4 +1,5 @@
-﻿using API.Application.Features.Business.Import.Commands.ImportExcel;
+﻿using API.Application.Features.Business.Bootstrap.Commands.Seed;
+using API.Application.Features.Business.Import.Commands.ImportExcel;
 using CatalogAPI.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -59,6 +60,17 @@ namespace CatalogAPI.Controllers
             }
 
             return null;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("bootstrap/seed")]
+        public async Task<IActionResult> SeedAsync(
+            [FromHeader(Name = "X-Bootstrap-Key")] string? bootstrapKey,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new SeedBootstrapCommand(bootstrapKey);
+            var result = await _mediator.Send(command, cancellationToken);
+            return this.ToActionResult(result);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using API.Domain.Common.Specifications;
+using API.Domain.Common.Specifications;
 using API.Domain.Extensions;
 using API.Domain.Features.Business.Audit;
 
@@ -9,7 +9,7 @@ namespace API.Application.Features.Business.Audit.Queries.GetAll
     {
         public GetAllAuditLogsSpecification(GetAllAuditLogsQuery query)
         {
-            AddCriteria(x => x.Timestamp >= query.From && x.Timestamp <= query.To);
+            ApplyDateRange(query.From, query.To, x => x.Timestamp);
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
