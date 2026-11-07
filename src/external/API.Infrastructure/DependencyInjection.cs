@@ -3,6 +3,9 @@ using API.Application.Features.Business;
 using API.Application.Features.Business.Audit;
 using API.Application.Features.Business.Bootstrap.Services;
 using API.Application.Features.Business.Import;
+using API.Application.Features.Catalog.Brands;
+using API.Application.Features.Catalog.Categories;
+using API.Application.Features.Catalog.Units;
 using API.Contract.Settings;
 using API.Domain.Common.Repositories;
 using API.Domain.Features.Business.Audit;
@@ -14,6 +17,9 @@ using API.Infrastructure.Features.Business.Audit;
 using API.Infrastructure.Features.Business.Audit.Services;
 using API.Infrastructure.Features.Business.Bootstrap;
 using API.Infrastructure.Features.Business.Import;
+using API.Infrastructure.Features.Catalog.Brands;
+using API.Infrastructure.Features.Catalog.Categories;
+using API.Infrastructure.Features.Catalog.Units;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -108,6 +114,9 @@ namespace API.Infrastructure
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IBootstrapService, BootstrapService>();
 
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IUnitService, UnitService>();
 
             return services;
         }

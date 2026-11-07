@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\Business\Import\SheetImporters\" />
+	  <Folder Include="Mapping\Catalog\" />
 	</ItemGroup>
 
 </Project>
