@@ -11,6 +11,11 @@ namespace API.Application.Features.Catalog.Categories.Queries.GetAll
         {
             EnableSoftDeleteFilter();
 
+            AddInclude(x => x.Products);
+
+            AddIncludeAggregator(x => x.Include(c => c.Childrens)
+                                       .ThenInclude(ch => ch.Products));
+
             ApplyDateRange(query.From, query.To, p => p.CreatedAt);
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))

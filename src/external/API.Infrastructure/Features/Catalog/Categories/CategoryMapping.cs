@@ -15,13 +15,14 @@ namespace API.Infrastructure.Features.Catalog.Categories
 
             CreateMap<Category, CategoryResponse>()
                 .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId));
+                    opt => opt.MapFrom(src => src.PublicId))
+                .ForMember(dest => dest.ProductCount,
+                    opt => opt.MapFrom(src => src.Products.Count() + src.Childrens.Sum(x => x.Products.Count)));
 
             CreateMap<Category, CategoryDetailResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId))
-                .ForMember(dest => dest.Products,
-                    opt => opt.MapFrom(src => src.Products));
+                .IncludeBase<Category, CategoryResponse>()
+                .ForMember(dest => dest.Products, opt => opt.MapFrom(src =>
+                    src.Products.Concat(src.Childrens.SelectMany(x => x.Products))));
 
             CreateMap<CreateCategoryRequest, Category>();
 

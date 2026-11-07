@@ -19,18 +19,13 @@ namespace API.Infrastructure.Features.Catalog.Products
                 .ForMember(dest => dest.CategoryName, 
                     opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty))
                 .ForMember(dest => dest.UnitSymbol, 
-                    opt => opt.MapFrom(src => src.Unit != null ? src.Unit.Symbol : string.Empty));
+                    opt => opt.MapFrom(src => src.Unit != null ? src.Unit.Symbol : string.Empty))
+                .ForMember(dest => dest.PrimaryImage,
+                    opt => opt.MapFrom(src => src.ProductImages.FirstOrDefault(x => x.IsPrimary)));
 
 
             CreateMap<Product, ProductDetailResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId))
-                .ForMember(dest => dest.BrandName, 
-                    opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
-                .ForMember(dest => dest.CategoryName, 
-                    opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty))
-                .ForMember(dest => dest.UnitSymbol, 
-                    opt => opt.MapFrom(src => src.Unit != null ? src.Unit.Symbol : string.Empty));
+                .IncludeBase<Product, ProductResponse>();
 
             CreateMap<Product, ProductMinimalResponse>()
                 .ForMember(dest => dest.Id, 

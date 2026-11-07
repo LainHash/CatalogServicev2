@@ -1,3 +1,5 @@
+using API.Contract.DTOs.Storage.ProductImages;
+
 namespace API.Contract.DTOs.Catalog.Products
 {
     public class ProductResponse
@@ -16,6 +18,6 @@ namespace API.Contract.DTOs.Catalog.Products
 
         //public StockStatus? StockStatus { get; set; }
         //public bool? IsRecommended { get; set; } = null;
-        //public ProductImageResponse? PrimaryImage { get; set; } = null;
+        public ProductImageResponse? PrimaryImage { get; set; }
     }
 }

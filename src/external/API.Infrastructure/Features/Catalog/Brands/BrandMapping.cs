@@ -13,13 +13,14 @@ namespace API.Infrastructure.Features.Catalog.Brands
 
             CreateMap<Brand, BrandResponse>()
                 .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId));
+                    opt => opt.MapFrom(src => src.PublicId))
+                .ForMember(dest => dest.ProductCount,
+                    opt => opt.MapFrom(src => src.Products.Count()))
+                .ForMember(dest => dest.PrimaryImage,
+                    opt => opt.MapFrom(src => src.BrandImages.FirstOrDefault(x => x.IsPrimary)));
 
             CreateMap<Brand, BrandDetailResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId))
-                .ForMember(dest => dest.Products,
-                    opt => opt.MapFrom(src => src.Products));
+                .IncludeBase<Brand, BrandResponse>();
 
             CreateMap<CreateBrandRequest, Brand>();
 

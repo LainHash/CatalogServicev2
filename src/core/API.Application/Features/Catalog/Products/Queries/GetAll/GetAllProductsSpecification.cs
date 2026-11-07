@@ -20,8 +20,9 @@ namespace API.Application.Features.Catalog.Products.Queries.GetAll
             AddInclude(p => p.Unit);
             AddInclude(p => p.Brand!);
 
-            //AddIncludeAggregator(x => x.Include(p => p.ProductImages)
-            //                            .ThenInclude(pi => pi.Image));
+            AddIncludeAggregator(x => x
+                .Include(p => p.ProductImages)
+                    .ThenInclude(pi => pi.Image));
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
@@ -34,7 +35,9 @@ namespace API.Application.Features.Catalog.Products.Queries.GetAll
 
             if (query.CategoryId is not null)
             {
-                AddCriteria(p => p.Category.PublicId == query.CategoryId);
+                AddCriteria(p =>
+                    p.Category.PublicId == query.CategoryId ||
+                    (p.Category.Parent != null && p.Category.Parent.PublicId == query.CategoryId));
             }
 
             if (query.BrandId is not null)
