@@ -29,6 +29,11 @@ namespace API.Infrastructure.Features.Catalog.Categories
 
             builder.Property(x => x.Description)
                 .HasMaxLength(1000);
+
+            builder.HasOne(x => x.Parent)
+                .WithMany(x => x.Childrens)
+                .HasForeignKey(x => x.ParentId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

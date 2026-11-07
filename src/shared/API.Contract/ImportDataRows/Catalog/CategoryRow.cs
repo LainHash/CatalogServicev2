@@ -6,4 +6,9 @@
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
     }
+
+    public class ChildCategoryRow : CategoryRow
+    {
+        public Guid ParentPublicId { get; set; }
+    }
 }

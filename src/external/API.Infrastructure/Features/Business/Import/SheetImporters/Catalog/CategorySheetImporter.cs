@@ -22,7 +22,7 @@ namespace API.Infrastructure.Features.Business.Import.SheetImporters.Catalog
             _mapper = mapper;
         }
 
-        public override string SheetName => "ProductCategories";
+        public override string SheetName => "Categories";
 
         protected override async Task BeforeProcessRowsAsync(
             IReadOnlyList<CategoryRow> rows,

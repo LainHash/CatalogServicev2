@@ -8,6 +8,10 @@ namespace API.Domain.Features.Catalog.Categories
         public string Name { get; private set; } = string.Empty;
         public string? Description { get; private set; }
 
+        public long? ParentId { get; private set; }
+        public Category? Parent { get; private set; }
+        public ICollection<Category> Childrens { get; private set; } = [];
+
         public ICollection<Product> Products { get; private set; } = [];
     }
 }

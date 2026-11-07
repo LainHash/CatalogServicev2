@@ -11,6 +11,8 @@ namespace API.Infrastructure.Features.Catalog.Categories
         {
             CreateMap<CategoryRow, Category>();
 
+            CreateMap<ChildCategoryRow, Category>();
+
             CreateMap<Category, CategoryResponse>()
                 .ForMember(dest => dest.Id, 
                     opt => opt.MapFrom(src => src.PublicId));
