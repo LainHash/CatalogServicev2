@@ -1,8 +1,13 @@
-﻿using DotNetEnv;
-using Microsoft.OpenApi.Models;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using API.Application;
+using API.Contract.Settings;
 using API.Infrastructure;
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace CatalogAPI
 {
@@ -21,6 +26,61 @@ namespace CatalogAPI
                     new JsonStringEnumConverter());
             });
 
+            return services;
+        }
+
+        public static IServiceCollection AddJwtConfig(
+            this IServiceCollection services,
+            ConfigurationManager configuration)
+        {
+            var jwtSettings = configuration
+                .GetSection("Jwt")
+                .Get<JwtSettings>() ?? new JwtSettings();
+
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    // 1. Tự động tải & cache RSA Public Key từ IdentityService qua JWKS Discovery
+                    if (!string.IsNullOrWhiteSpace(jwtSettings.MetadataAddress))
+                    {
+                        options.MetadataAddress = jwtSettings.MetadataAddress;
+                        options.RequireHttpsMetadata = false;
+                        options.BackchannelHttpHandler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback =
+                                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
+                    }
+
+                    var validationParams = new TokenValidationParameters
+                    {
+                        ValidateIssuer = !string.IsNullOrWhiteSpace(jwtSettings.Issuer),
+                        ValidateAudience = !string.IsNullOrWhiteSpace(jwtSettings.Audience),
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        RoleClaimType = ClaimTypes.Role,
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+
+                    // 2. Fallback nếu truyền trực tiếp PublicKeyPem trong .env
+                    if (!string.IsNullOrWhiteSpace(jwtSettings.PublicKeyPem))
+                    {
+                        var rsa = RSA.Create();
+                        rsa.ImportFromPem(jwtSettings.PublicKeyPem.Replace("\\n", "\n"));
+                        validationParams.IssuerSigningKey = new RsaSecurityKey(rsa);
+                    }
+
+                    options.TokenValidationParameters = validationParams;
+                });
+
+            services.AddAuthorization();
 
             return services;
         }
@@ -77,7 +137,8 @@ namespace CatalogAPI
                 var envPath = Path.Combine(searchDir, ".env");
                 if (File.Exists(envPath))
                 {
-                    Env.Load(envPath); break;
+                    Env.Load(envPath);
+                    break;
                 }
                 searchDir = Directory.GetParent(searchDir)?.FullName;
             }
