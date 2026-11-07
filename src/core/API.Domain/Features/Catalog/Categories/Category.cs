@@ -3,7 +3,7 @@ using API.Domain.Features.Catalog.Products;
 
 namespace API.Domain.Features.Catalog.Categories
 {
-    public class Category : SoftDeletableEntity
+    public partial class Category : SoftDeletableEntity
     {
         public string Name { get; private set; } = string.Empty;
         public string? Description { get; private set; }
@@ -13,5 +13,14 @@ namespace API.Domain.Features.Catalog.Categories
         public ICollection<Category> Childrens { get; private set; } = [];
 
         public ICollection<Product> Products { get; private set; } = [];
+    }
+
+    public partial class Category
+    {
+        public Category SetParent(long? parentId)
+        {
+            ParentId = parentId;
+            return this;
+        }
     }
 }

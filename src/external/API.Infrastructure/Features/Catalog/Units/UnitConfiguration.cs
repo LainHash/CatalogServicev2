@@ -1,4 +1,4 @@
-﻿using API.Domain.Features.Catalog.Units;
+using API.Domain.Features.Catalog.Units;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -34,6 +34,14 @@ namespace API.Infrastructure.Features.Catalog.Units
             builder.Property(x => x.Type)
                 .IsRequired()
                 .HasConversion<string>();
+
+            builder.Property(x => x.ConversionRate)
+                .IsRequired();
+
+            builder.HasOne(x => x.Parent)
+                .WithMany(x => x.Childrens)
+                .HasForeignKey(x => x.ParentId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
