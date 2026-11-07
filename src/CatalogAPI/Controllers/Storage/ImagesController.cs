@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers.Storage
 {
-    [Route("api/[controller]")]
+    [Route("api/storage/images")]
     [ApiController]
     public class ImagesController(IMediator mediator) 
         : ControllerBase

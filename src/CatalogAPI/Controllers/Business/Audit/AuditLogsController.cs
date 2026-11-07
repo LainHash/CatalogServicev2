@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers.Business.Audit
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/catalog/audit-logs")]
     [ApiController]
     public class AuditLogsController(IMediator mediator) : ControllerBase
     {
