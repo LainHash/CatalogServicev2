@@ -1,4 +1,5 @@
 using API.Contract.DTOs.Catalog.Products;
+using API.Contract.ImportDataRows.Catalog;
 using API.Domain.Features.Catalog.Products;
 using AutoMapper;
 
@@ -8,7 +9,7 @@ namespace API.Infrastructure.Features.Catalog.Products
     {
         public ProductMapping()
         {
-            //CreateMap<ProductRow, Product>();
+            CreateMap<ProductRow, Product>();
 
             CreateMap<Product, ProductResponse>()
                 .ForMember(dest => dest.Id, 

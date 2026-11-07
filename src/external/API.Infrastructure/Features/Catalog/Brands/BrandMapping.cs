@@ -1,4 +1,5 @@
 using API.Contract.DTOs.Catalog.Brands;
+using API.Contract.ImportDataRows.Catalog;
 using API.Domain.Features.Catalog.Brands;
 using AutoMapper;
 
@@ -8,7 +9,7 @@ namespace API.Infrastructure.Features.Catalog.Brands
     {
         public BrandMapping()
         {
-            //CreateMap<BrandRow, Brand>();
+            CreateMap<BrandRow, Brand>();
 
             CreateMap<Brand, BrandResponse>()
                 .ForMember(dest => dest.Id, 

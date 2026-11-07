@@ -1,4 +1,5 @@
 using API.Contract.DTOs.Catalog.Categories;
+using API.Contract.ImportDataRows.Catalog;
 using API.Domain.Features.Catalog.Categories;
 using AutoMapper;
 
@@ -8,7 +9,7 @@ namespace API.Infrastructure.Features.Catalog.Categories
     {
         public CategoryMapping()
         {
-            //CreateMap<CategoryRow, Category>();
+            CreateMap<CategoryRow, Category>();
 
             CreateMap<Category, CategoryResponse>()
                 .ForMember(dest => dest.Id, 

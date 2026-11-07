@@ -1,4 +1,5 @@
 ﻿using API.Contract.DTOs.Catalog.Units;
+using API.Contract.ImportDataRows.Catalog;
 using API.Domain.Features.Catalog.Units;
 using AutoMapper;
 
@@ -8,9 +9,9 @@ namespace API.Infrastructure.Features.Catalog.Units
     {
         public UnitMapping()
         {
-            //CreateMap<UnitRow, Unit>();
+            CreateMap<UnitRow, Unit>();
 
-            //CreateMap<ChildUnitRow, Unit>();
+            CreateMap<ChildUnitRow, Unit>();
 
             CreateMap<Unit, UnitResponse>()
                 .ForMember(dest => dest.Id, 
