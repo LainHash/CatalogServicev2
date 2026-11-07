@@ -9,11 +9,13 @@ namespace API.Application.Features.Catalog.Units.Queries.GetAll
     {
         public GetAllUnitsSpecification(GetAllUnitsQuery query)
         {
+            ApplyDateRange(query.From, query.To, u => u.CreatedAt);
+
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
-                Criteria = u =>
+                AddCriteria(u =>
                     EF.Functions.Like(u.Name, $"%{query.Keyword}%") ||
-                    EF.Functions.Like(u.Symbol, $"%{query.Keyword}%");
+                    EF.Functions.Like(u.Symbol, $"%{query.Keyword}%"));
             }
 
             switch (query.SortField)

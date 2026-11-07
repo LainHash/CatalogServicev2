@@ -14,6 +14,8 @@ namespace API.Application.Features.Catalog.Products.Queries.GetAll
 
             AddCriteria(p => !p.IsDeleted);
 
+            ApplyDateRange(query.From, query.To, p => p.CreatedAt);
+
             AddInclude(p => p.Category);
             AddInclude(p => p.Unit);
             AddInclude(p => p.Brand!);

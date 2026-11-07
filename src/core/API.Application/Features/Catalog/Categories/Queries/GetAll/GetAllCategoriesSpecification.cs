@@ -11,11 +11,13 @@ namespace API.Application.Features.Catalog.Categories.Queries.GetAll
         {
             EnableSoftDeleteFilter();
 
+            ApplyDateRange(query.From, query.To, p => p.CreatedAt);
+
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
-                Criteria = p =>
+                AddCriteria(p =>
                     EF.Functions.Like(p.Name, $"%{query.Keyword}%") ||
-                    EF.Functions.Like(p.Description, $"%{query.Keyword}%");
+                    EF.Functions.Like(p.Description, $"%{query.Keyword}%"));
             }
 
             switch (query.SortField)
