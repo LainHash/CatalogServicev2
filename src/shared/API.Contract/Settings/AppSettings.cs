@@ -8,5 +8,6 @@ namespace API.Contract.Settings
         public JwtSettings Jwt { get; init; } = new();
         public AuditLogSettings AuditLog { get; init; } = new();
         public DatabaseSettings Database { get; init; } = new();
+        public BootstrapSettings Bootstrap { get; init; } = new();
     }
 }

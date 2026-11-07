@@ -1,6 +1,7 @@
 using API.Application.Features.Authentication;
 using API.Application.Features.Business;
 using API.Application.Features.Business.Audit;
+using API.Application.Features.Business.Bootstrap.Services;
 using API.Application.Features.Business.Import;
 using API.Contract.Settings;
 using API.Domain.Common.Repositories;
@@ -11,6 +12,7 @@ using API.Infrastructure.Context;
 using API.Infrastructure.Features.Authentication;
 using API.Infrastructure.Features.Business.Audit;
 using API.Infrastructure.Features.Business.Audit.Services;
+using API.Infrastructure.Features.Business.Bootstrap;
 using API.Infrastructure.Features.Business.Import;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -79,6 +81,18 @@ namespace API.Infrastructure
                 }
             }
 
+            // ── Data Seeders (Strategy Pattern) ───────────────────────────────
+            foreach (var type in assembly.GetTypes())
+            {
+                if (!type.IsClass || type.IsAbstract)
+                    continue;
+
+                if (typeof(IDataSeeder).IsAssignableFrom(type))
+                {
+                    services.AddScoped(typeof(IDataSeeder), type);
+                }
+            }
+
             // ── Audit Log ────────────────────────────────────────────────────
             services.AddHttpContextAccessor();
             services.AddScoped<IAuditContext, AuditContext>();
@@ -92,6 +106,7 @@ namespace API.Infrastructure
             // ── Services ─────────────────────────────────────────────────────
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImportService, ImportService>();
+            services.AddScoped<IBootstrapService, BootstrapService>();
 
 
             return services;
