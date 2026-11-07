@@ -21,6 +21,13 @@ namespace CatalogAPI
                     new JsonStringEnumConverter());
             });
 
+
+            return services;
+        }
+
+        public static IServiceCollection AddCustomSwagger(
+            this IServiceCollection services)
+        {
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
