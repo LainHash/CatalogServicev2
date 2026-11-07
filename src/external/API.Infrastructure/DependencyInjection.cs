@@ -5,6 +5,7 @@ using API.Application.Features.Business.Bootstrap.Services;
 using API.Application.Features.Business.Import;
 using API.Application.Features.Catalog.Brands;
 using API.Application.Features.Catalog.Categories;
+using API.Application.Features.Catalog.Products;
 using API.Application.Features.Catalog.Units;
 using API.Contract.Settings;
 using API.Domain.Common.Repositories;
@@ -19,6 +20,7 @@ using API.Infrastructure.Features.Business.Bootstrap;
 using API.Infrastructure.Features.Business.Import;
 using API.Infrastructure.Features.Catalog.Brands;
 using API.Infrastructure.Features.Catalog.Categories;
+using API.Infrastructure.Features.Catalog.Products;
 using API.Infrastructure.Features.Catalog.Units;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -117,6 +119,7 @@ namespace API.Infrastructure
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IUnitService, UnitService>();
+            services.AddScoped<IProductService, ProductService>();
 
             return services;
         }
