@@ -40,7 +40,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Features\Business\Bootstrap\Seeders\" />
 	  <Folder Include="Features\Business\Import\SheetImporters\" />
 	</ItemGroup>
 
