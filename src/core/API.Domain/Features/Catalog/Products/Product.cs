@@ -3,6 +3,7 @@ using API.Domain.Features.Catalog.Categories;
 using API.Domain.Features.Catalog.Products.Enums;
 using API.Domain.Features.Catalog.Units;
 using API.Domain.Common.Entities;
+using API.Domain.Features.Storage.ProductImages;
 
 namespace API.Domain.Features.Catalog.Products
 {
@@ -19,6 +20,8 @@ namespace API.Domain.Features.Catalog.Products
         public Brand? Brand { get; private set; }
         public Category Category { get; private set; } = null!;
         public Unit Unit { get; private set; } = null!;
+
+        public ICollection<ProductImage> ProductImages { get; private set; } = [];
     }
 
     public partial class Product

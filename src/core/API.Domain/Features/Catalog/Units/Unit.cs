@@ -10,8 +10,6 @@ namespace API.Domain.Features.Catalog.Units
 
         public UnitType Type { get; private set; }
 
-        public decimal ConversionRate { get; private set; }
-
         public long? ParentId { get; private set; }
         public Unit? Parent { get; private set; }
         public ICollection<Unit> Childrens { get; private set; } = [];
