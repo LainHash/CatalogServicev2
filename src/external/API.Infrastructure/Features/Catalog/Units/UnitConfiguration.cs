@@ -35,9 +35,6 @@ namespace API.Infrastructure.Features.Catalog.Units
                 .IsRequired()
                 .HasConversion<string>();
 
-            builder.Property(x => x.ConversionRate)
-                .IsRequired();
-
             builder.HasOne(x => x.Parent)
                 .WithMany(x => x.Childrens)
                 .HasForeignKey(x => x.ParentId)

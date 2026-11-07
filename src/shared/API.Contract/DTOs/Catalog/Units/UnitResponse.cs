@@ -10,7 +10,5 @@ namespace API.Contract.DTOs.Catalog.Units
         public string Symbol { get; set; } = null!;
 
         public UnitType Type { get; set; }
-
-        public decimal ConversionRate { get; set; }
     }
 }

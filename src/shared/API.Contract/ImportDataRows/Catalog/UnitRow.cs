@@ -9,8 +9,6 @@ namespace API.Contract.ImportDataRows.Catalog
         public string Symbol { get; set; } = null!;
 
         public UnitType Type { get; set; }
-
-        public decimal ConversionRate { get; set; }
     }
 
     public class ChildUnitRow : UnitRow

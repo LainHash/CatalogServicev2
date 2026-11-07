@@ -7,6 +7,7 @@ using API.Application.Features.Catalog.Brands;
 using API.Application.Features.Catalog.Categories;
 using API.Application.Features.Catalog.Products;
 using API.Application.Features.Catalog.Units;
+using API.Application.Features.Storage.Images;
 using API.Contract.Settings;
 using API.Domain.Common.Repositories;
 using API.Domain.Features.Business.Audit;
@@ -14,6 +15,7 @@ using API.Infrastructure.Common.Repositories;
 using API.Infrastructure.Common.Services;
 using API.Infrastructure.Context;
 using API.Infrastructure.Features.Authentication;
+using API.Infrastructure.Features.Business;
 using API.Infrastructure.Features.Business.Audit;
 using API.Infrastructure.Features.Business.Audit.Services;
 using API.Infrastructure.Features.Business.Bootstrap;
@@ -22,6 +24,7 @@ using API.Infrastructure.Features.Catalog.Brands;
 using API.Infrastructure.Features.Catalog.Categories;
 using API.Infrastructure.Features.Catalog.Products;
 using API.Infrastructure.Features.Catalog.Units;
+using API.Infrastructure.Features.Storage.Images;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -115,11 +118,14 @@ namespace API.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IBootstrapService, BootstrapService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IImageService, ImageService>();
 
             return services;
         }
