@@ -2,6 +2,10 @@ using API.Application.Features.Business.Audit;
 using API.Contract.Settings;
 using API.Domain.Features.Business.Audit;
 using API.Domain.Features.Business.Configurations;
+using API.Domain.Features.Catalog.Brands;
+using API.Domain.Features.Catalog.Categories;
+using API.Domain.Features.Catalog.Products;
+using API.Domain.Features.Catalog.Units;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +15,11 @@ namespace API.Infrastructure.Context
     {
         public DbSet<AuditLog> AuditLogs { get; set; } = null!;
         public DbSet<SystemSetting> SystemSettings { get; set; } = null!;
+
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Brand> Brands { get; set; } = null!;
+        public DbSet<Unit> Units { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
 
         // ── IAuditContext injected via constructor ────────────────────────────
         private readonly IAuditContext _auditContext;
