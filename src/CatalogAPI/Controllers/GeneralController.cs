@@ -1,4 +1,4 @@
-﻿using API.Application.Features.Business.Bootstrap.Commands.Seed;
+using API.Application.Features.Business.Bootstrap.Commands.Seed;
 using API.Application.Features.Business.Import.Commands.ImportExcel;
 using CatalogAPI.Extensions;
 using MediatR;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CatalogAPI.Controllers
 {
     [ApiController]
-    [Route("")]
+    [Route("api/catalog")]
     public class GeneralController(IMediator mediator)
         : ControllerBase
     {
