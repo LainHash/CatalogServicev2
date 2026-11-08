@@ -78,6 +78,21 @@ namespace CatalogAPI
                     }
 
                     options.TokenValidationParameters = validationParams;
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (string.IsNullOrEmpty(context.Token)
+                                && !context.Request.Headers.ContainsKey("Authorization")
+                                && context.Request.Cookies.TryGetValue("access_token", out var token)
+                                && !string.IsNullOrEmpty(token))
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddAuthorization();
