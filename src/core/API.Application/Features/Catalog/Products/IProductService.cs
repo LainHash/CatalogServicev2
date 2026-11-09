@@ -12,10 +12,12 @@ namespace API.Application.Features.Catalog.Products
     public interface IProductService
     {
         Task<PaginationResult<IEnumerable<ProductResponse>>> GetAllAsync(
+            GetAllProductsQuery query,
             GetAllProductsSpecification specification,
             CancellationToken cancellationToken = default);
 
         Task<Result<ProductDetailResponse>> GetByIdAsync(
+            GetProductByIdQuery query,
             GetProductByIdSpecification specification,
             CancellationToken cancellationToken = default);
 

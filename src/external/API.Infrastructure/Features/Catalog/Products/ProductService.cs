@@ -24,6 +24,7 @@ namespace API.Infrastructure.Features.Catalog.Products
         private readonly ICategoryRepository _categoryRepository;
         private readonly IBrandRepository _brandRepository;
         private readonly IUnitRepository _unitRepository;
+        private readonly ITerritoryProductBranchClient _territoryProductBranchClient;
 
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -34,7 +35,8 @@ namespace API.Infrastructure.Features.Catalog.Products
             IUnitOfWork unitOfWork,
             ICategoryRepository categoryRepository,
             IBrandRepository brandRepository,
-            IUnitRepository unitRepository)
+            IUnitRepository unitRepository,
+            ITerritoryProductBranchClient territoryProductBranchClient)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -42,25 +44,55 @@ namespace API.Infrastructure.Features.Catalog.Products
             _categoryRepository = categoryRepository;
             _brandRepository = brandRepository;
             _unitRepository = unitRepository;
+            _territoryProductBranchClient = territoryProductBranchClient;
         }
 
         public async Task<PaginationResult<IEnumerable<ProductResponse>>> GetAllAsync(
+            GetAllProductsQuery query,
             GetAllProductsSpecification specification,
             CancellationToken cancellationToken)
         {
+            IReadOnlyDictionary<Guid, ProductBranchDto>? branchProductsDict = null;
+
+            if (query.BranchId.HasValue)
+            {
+                branchProductsDict = await _territoryProductBranchClient
+                    .GetByBranchAsync(query.BranchId.Value, cancellationToken: cancellationToken);
+
+                if (branchProductsDict.Count == 0)
+                {
+                    return PaginationResult<IEnumerable<ProductResponse>>
+                        .Succeed([], Success.Retrieved("Products"), 0, specification.Skip, specification.Take);
+                }
+
+                specification.ApplyBranchProductIds(branchProductsDict.Keys.ToList());
+            }
+
             var totalItems = await _productRepository
                 .CountAsync(specification, cancellationToken);
 
             var products = await _productRepository
                 .ToListAsync(specification, cancellationToken);
 
-            var response = _mapper.Map<IEnumerable<ProductResponse>>(products);
+            var response = _mapper.Map<IEnumerable<ProductResponse>>(products).ToList();
+
+            if (branchProductsDict is not null)
+            {
+                foreach (var item in response)
+                {
+                    if (branchProductsDict.TryGetValue(item.Id, out var productBranch))
+                    {
+                        PopulatePriceStock(item, productBranch);
+                    }
+                }
+            }
 
             return PaginationResult<IEnumerable<ProductResponse>>
                 .Succeed(response, Success.Retrieved("Products"), totalItems, specification.Skip, specification.Take);
         }
 
         public async Task<Result<ProductDetailResponse>> GetByIdAsync(
+            GetProductByIdQuery query,
             GetProductByIdSpecification specification,
             CancellationToken cancellationToken)
         {
@@ -74,8 +106,29 @@ namespace API.Infrastructure.Features.Catalog.Products
 
             var response = _mapper.Map<ProductDetailResponse>(product);
 
+            if (query.BranchId.HasValue)
+            {
+                var branchProductsDict = await _territoryProductBranchClient
+                    .GetByBranchAsync(query.BranchId.Value, [product.PublicId], cancellationToken);
+
+                if (branchProductsDict.TryGetValue(product.PublicId, out var productBranch))
+                {
+                    PopulatePriceStock(response, productBranch);
+                }
+            }
+
             return Result<ProductDetailResponse>
                 .Succeed(response, Success.Retrieved("Product"));
+        }
+
+        private static void PopulatePriceStock(
+            ProductResponse response,
+            ProductBranchDto productBranch)
+        {
+            response.Currency = productBranch.Currency;
+            response.UnitPrice = productBranch.UnitPrice;
+            response.IsRecommended = productBranch.IsRecommended;
+            response.StockStatus = productBranch.StockStatus;
         }
 
         public async Task<Result<ProductResponse>> CreateAsync(

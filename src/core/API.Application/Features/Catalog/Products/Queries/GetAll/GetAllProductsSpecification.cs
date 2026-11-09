@@ -71,5 +71,10 @@ namespace API.Application.Features.Catalog.Products.Queries.GetAll
 
             ApplyPaging(query.Page, query.PageSize);
         }
+
+        public void ApplyBranchProductIds(ICollection<Guid> productPublicIds)
+        {
+            AddCriteria(p => productPublicIds.Contains(p.PublicId));
+        }
     }
 }

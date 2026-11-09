@@ -1,4 +1,5 @@
 using API.Contract.DTOs.Storage.ProductImages;
+using API.Domain.Common.Enums;
 
 namespace API.Contract.DTOs.Catalog.Products
 {
@@ -13,11 +14,11 @@ namespace API.Contract.DTOs.Catalog.Products
         public string CategoryName { get; set; } = string.Empty;
         public string UnitSymbol { get; set; } = string.Empty;
 
-        //public decimal? UnitPrice { get; set; }
-        //public string? Currency { get; set; } = string.Empty;
+        public decimal? UnitPrice { get; set; }
+        public string? Currency { get; set; }
 
-        //public StockStatus? StockStatus { get; set; }
-        //public bool? IsRecommended { get; set; } = null;
+        public StockStatus? StockStatus { get; set; }
+        public bool? IsRecommended { get; set; }
         public ProductImageResponse? PrimaryImage { get; set; }
     }
 }

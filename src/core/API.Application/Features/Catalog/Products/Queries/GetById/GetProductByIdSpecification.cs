@@ -17,8 +17,8 @@ namespace API.Application.Features.Catalog.Products.Queries.GetById
             AddInclude(p => p.Unit);
             AddInclude(p => p.Brand!);
 
-            //AddIncludeAggregator(x => x.Include(p => p.ProductImages)
-            //                            .ThenInclude(pi => pi.Image));
+            AddIncludeAggregator(x => x.Include(p => p.ProductImages)
+                                       .ThenInclude(pi => pi.Image));
         }
     }
 }
