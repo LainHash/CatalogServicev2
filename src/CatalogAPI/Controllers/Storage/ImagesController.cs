@@ -1,4 +1,4 @@
-﻿using API.Application.Features.Storage.Images.Commands.UploadBrandImage;
+using API.Application.Features.Storage.Images.Commands.UploadBrandImage;
 using API.Application.Features.Storage.Images.Commands.UploadProductImage;
 using API.Application.Features.Storage.Images.Queries;
 using API.Contract.DTOs.Storage.BrandImages;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers.Storage
 {
-    [Route("api/storage/images")]
+    [Route("api/catalog/images")]
     [ApiController]
     public class ImagesController(IMediator mediator) 
         : ControllerBase

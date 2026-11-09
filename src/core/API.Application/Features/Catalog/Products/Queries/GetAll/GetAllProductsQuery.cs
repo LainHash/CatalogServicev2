@@ -8,7 +8,8 @@ namespace API.Application.Features.Catalog.Products.Queries.GetAll
     public record GetAllProductsQuery(
         Guid? CategoryId = null,
         Guid? BrandId = null,
-        string? InventoryType = null)
+        string? InventoryType = null,
+        Guid? BranchId = null)
         : PaginationQuery, IRequest<PaginationResult<IEnumerable<ProductResponse>>>
     {
     }

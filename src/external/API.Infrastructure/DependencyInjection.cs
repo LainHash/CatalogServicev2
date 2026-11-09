@@ -125,6 +125,18 @@ namespace API.Infrastructure
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IProductService, ProductService>();
 
+            var territoryUrl = configuration["Services:TerritoryUrl"] ?? "https://localhost:7175";
+            services.AddHttpClient<ITerritoryProductBranchClient, TerritoryProductBranchClient>(client =>
+            {
+                client.BaseAddress = new Uri(territoryUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            });
+
             services.AddScoped<IImageService, ImageService>();
 
             return services;

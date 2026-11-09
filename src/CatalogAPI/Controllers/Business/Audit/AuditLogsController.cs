@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers.Business.Audit
 {
-    [Route("api/admin/catalog/audit-logs")]
+    [Route("api/catalog/audit-logs")]
     [ApiController]
     [Authorize(Roles = "SuperAdmin,Admin")]
     public class AuditLogsController(IMediator mediator) : ControllerBase
