@@ -1,20 +1,21 @@
+using API.Application.Features.Business;
+using API.Application.Features.Catalog.Products;
 using API.Application.Features.Catalog.Products.Commands.Create;
 using API.Application.Features.Catalog.Products.Commands.Update;
 using API.Application.Features.Catalog.Products.Queries.GetAll;
 using API.Application.Features.Catalog.Products.Queries.GetById;
 using API.Contract.DTOs.Catalog.Products;
-using API.Domain.Features.Catalog.Products;
+using API.Domain.Common.Enums;
+using API.Domain.Common.Models.Messages;
+using API.Domain.Common.Models.Results;
+using API.Domain.Common.Specifications;
 using API.Domain.Features.Catalog.Brands;
+using API.Domain.Features.Catalog.Categories;
+using API.Domain.Features.Catalog.Products;
+using API.Domain.Features.Catalog.Products.Enums;
+using API.Domain.Features.Catalog.Units;
 using AutoMapper;
 using System.Net;
-using API.Domain.Features.Catalog.Units;
-using API.Domain.Features.Catalog.Products.Enums;
-using API.Application.Features.Catalog.Products;
-using API.Domain.Features.Catalog.Categories;
-using API.Application.Features.Business;
-using API.Domain.Common.Models.Results;
-using API.Domain.Common.Models.Messages;
-using API.Domain.Common.Specifications;
 
 namespace API.Infrastructure.Features.Catalog.Products
 {
@@ -25,6 +26,7 @@ namespace API.Infrastructure.Features.Catalog.Products
         private readonly IBrandRepository _brandRepository;
         private readonly IUnitRepository _unitRepository;
         private readonly ITerritoryProductBranchClient _territoryProductBranchClient;
+        private readonly ITerritoryRecipeClient _territoryRecipeClient;
 
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -36,7 +38,8 @@ namespace API.Infrastructure.Features.Catalog.Products
             ICategoryRepository categoryRepository,
             IBrandRepository brandRepository,
             IUnitRepository unitRepository,
-            ITerritoryProductBranchClient territoryProductBranchClient)
+            ITerritoryProductBranchClient territoryProductBranchClient,
+            ITerritoryRecipeClient territoryRecipeClient)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -45,6 +48,7 @@ namespace API.Infrastructure.Features.Catalog.Products
             _brandRepository = brandRepository;
             _unitRepository = unitRepository;
             _territoryProductBranchClient = territoryProductBranchClient;
+            _territoryRecipeClient = territoryRecipeClient;
         }
 
         public async Task<PaginationResult<IEnumerable<ProductResponse>>> GetAllAsync(
@@ -76,13 +80,36 @@ namespace API.Infrastructure.Features.Catalog.Products
 
             var response = _mapper.Map<IEnumerable<ProductResponse>>(products).ToList();
 
-            if (branchProductsDict is not null)
+            if (branchProductsDict is not null && query.BranchId.HasValue)
             {
+                var branchId = query.BranchId.Value;
                 foreach (var item in response)
                 {
                     if (branchProductsDict.TryGetValue(item.Id, out var productBranch))
                     {
                         PopulatePriceStock(item, productBranch);
+                    }
+                }
+
+                var madeToOrderItems = response
+                    .Where(p => string.Equals(p.InventoryType, nameof(InventoryType.MadeToOrder), StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                if (madeToOrderItems.Count > 0)
+                {
+                    var recipeStockDict = await _territoryRecipeClient
+                        .GetRecipeStockStatusAsync(branchId, madeToOrderItems.Select(x => x.Id), cancellationToken);
+
+                    foreach (var item in madeToOrderItems)
+                    {
+                        if (recipeStockDict.TryGetValue(item.Id, out var stockStatus))
+                        {
+                            item.StockStatus = stockStatus;
+                        }
+                        else
+                        {
+                            item.StockStatus = StockStatus.OutOfStock;
+                        }
                     }
                 }
             }
@@ -114,6 +141,21 @@ namespace API.Infrastructure.Features.Catalog.Products
                 if (branchProductsDict.TryGetValue(product.PublicId, out var productBranch))
                 {
                     PopulatePriceStock(response, productBranch);
+                }
+
+                if (product.InventoryType == InventoryType.MadeToOrder)
+                {
+                    var recipeStockDict = await _territoryRecipeClient
+                        .GetRecipeStockStatusAsync(query.BranchId.Value, [product.PublicId], cancellationToken);
+
+                    if (recipeStockDict.TryGetValue(product.PublicId, out var stockStatus))
+                    {
+                        response.StockStatus = stockStatus;
+                    }
+                    else
+                    {
+                        response.StockStatus = StockStatus.OutOfStock;
+                    }
                 }
             }
 

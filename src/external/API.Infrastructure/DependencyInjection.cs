@@ -137,6 +137,17 @@ namespace API.Infrastructure
                     HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
 
+            services.AddHttpClient<ITerritoryRecipeClient, TerritoryRecipeClient>(client =>
+            {
+                client.BaseAddress = new Uri(territoryUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            });
+
             services.AddScoped<IImageService, ImageService>();
 
             return services;
