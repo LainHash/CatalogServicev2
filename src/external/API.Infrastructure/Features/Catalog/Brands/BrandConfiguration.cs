@@ -1,4 +1,5 @@
 ﻿using API.Domain.Features.Catalog.Brands;
+using API.Domain.Features.Catalog.Brands.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,6 +30,10 @@ namespace API.Infrastructure.Features.Catalog.Brands
 
             builder.Property(x => x.Description)
                 .HasMaxLength(1000);
+
+            builder.Property(x => x.Type)
+                .HasConversion<string>()
+                .IsRequired();
         }
     }
 }
