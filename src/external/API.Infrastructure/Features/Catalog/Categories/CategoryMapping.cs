@@ -1,5 +1,7 @@
+using API.Contract.DTOs;
 using API.Contract.DTOs.Catalog.Categories;
 using API.Contract.ImportDataRows.Catalog;
+using API.Domain.Common.Entities;
 using API.Domain.Features.Catalog.Categories;
 using AutoMapper;
 
@@ -14,10 +16,9 @@ namespace API.Infrastructure.Features.Catalog.Categories
             CreateMap<ChildCategoryRow, Category>();
 
             CreateMap<Category, CategoryResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId))
                 .ForMember(dest => dest.ProductCount,
-                    opt => opt.MapFrom(src => src.Products.Count() + src.Childrens.Sum(x => x.Products.Count)));
+                    opt => opt.MapFrom(src => src.Products.Count() + src.Childrens.Sum(x => x.Products.Count)))
+                .IncludeBase<SoftDeletableEntity, SoftDeletableResponse>();
 
             CreateMap<Category, CategoryDetailResponse>()
                 .IncludeBase<Category, CategoryResponse>()

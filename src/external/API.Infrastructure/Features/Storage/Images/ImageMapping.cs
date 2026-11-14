@@ -1,6 +1,8 @@
 using AutoMapper;
+using API.Contract.DTOs;
 using API.Contract.DTOs.Storage.Images;
 using API.Contract.ImportDataRows.Storage;
+using API.Domain.Common.Entities;
 using API.Domain.Features.Storage.Images;
 using API.Domain.Common.Models.Results;
 
@@ -11,7 +13,7 @@ namespace API.Infrastructure.Features.Storage.Images
         public ImageMapping()
         {
             CreateMap<Image, ImageResponse>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PublicId));
+                .IncludeBase<AuditableEntity, AuditableResponse>();
 
             CreateMap<CloudinaryUploadResult, Image>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

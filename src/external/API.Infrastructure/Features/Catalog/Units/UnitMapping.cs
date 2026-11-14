@@ -1,5 +1,7 @@
-﻿using API.Contract.DTOs.Catalog.Units;
+using API.Contract.DTOs;
+using API.Contract.DTOs.Catalog.Units;
 using API.Contract.ImportDataRows.Catalog;
+using API.Domain.Common.Entities;
 using API.Domain.Features.Catalog.Units;
 using AutoMapper;
 
@@ -14,12 +16,10 @@ namespace API.Infrastructure.Features.Catalog.Units
             CreateMap<ChildUnitRow, Unit>();
 
             CreateMap<Unit, UnitResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId));
+                .IncludeBase<SoftDeletableEntity, SoftDeletableResponse>();
 
             CreateMap<Unit, UnitDetailResponse>()
-                .ForMember(dest => dest.Id, 
-                    opt => opt.MapFrom(src => src.PublicId));
+                .IncludeBase<Unit, UnitResponse>();
 
             CreateMap<CreateUnitRequest, Unit>();
 

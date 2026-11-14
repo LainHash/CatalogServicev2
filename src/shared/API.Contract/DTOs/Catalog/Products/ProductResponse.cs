@@ -3,9 +3,8 @@ using API.Domain.Common.Enums;
 
 namespace API.Contract.DTOs.Catalog.Products
 {
-    public class ProductResponse
+    public class ProductResponse : SoftDeletableResponse
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string InventoryType { get; set; } = null!;
